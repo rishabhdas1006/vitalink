@@ -96,6 +96,7 @@ export const AuthProvider = ({ children }) => {
 		localStorage.removeItem("storedRoleData");
 		setUser(null);
 		navigate("/login");
+		window.location.reload();
 	};
 
 	return (
