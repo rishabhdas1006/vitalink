@@ -1,10 +1,9 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { X } from "lucide-react";
 
 const SideBar = ({ showSideBar, handleSideBarClick }) => {
 	const { user, logout } = useAuth();
-	const navigate = useNavigate();
 
 	const handleLogout = () => {
 		logout();
@@ -38,21 +37,23 @@ const SideBar = ({ showSideBar, handleSideBarClick }) => {
 							<ul className="text-sm font-medium">
 								<li>
 									<Link
-										class="active flex items-center rounded py-2 text-gray-50 focus:text-gray-400"
+										className="active flex items-center rounded py-2 text-gray-50 focus:text-gray-400"
 										to="/dashboard"
 										onClick={handleSideBarClick}
 									>
-										<span class="select-none">
+										<span className="select-none">
 											Dashboard
 										</span>
 									</Link>
 								</li>
 								<li>
 									<button
-										class="flex items-center rounded py-2 text-gray-50 focus:text-gray-400"
+										className="flex items-center rounded py-2 text-gray-50 focus:text-gray-400"
 										onClick={handleLogout}
 									>
-										<span class="select-none">Logout</span>
+										<span className="select-none">
+											Logout
+										</span>
 									</button>
 								</li>
 							</ul>
@@ -64,22 +65,24 @@ const SideBar = ({ showSideBar, handleSideBarClick }) => {
 							<ul className="font-medium">
 								<li>
 									<Link
-										class="flex items-center rounded p-2 text-gray-50 focus:text-gray-400"
+										className="flex items-center rounded p-2 text-gray-50 focus:text-gray-400"
 										to="/register"
 										onClick={handleSideBarClick}
 									>
-										<span class="select-none">
+										<span className="select-none">
 											Register
 										</span>
 									</Link>
 								</li>
 								<li>
 									<Link
-										class="flex items-center rounded p-2 text-gray-50 focus:text-gray-400"
+										className="flex items-center rounded p-2 text-gray-50 focus:text-gray-400"
 										to="/login"
 										onClick={handleSideBarClick}
 									>
-										<span class="select-none">Login</span>
+										<span className="select-none">
+											Login
+										</span>
 									</Link>
 								</li>
 							</ul>

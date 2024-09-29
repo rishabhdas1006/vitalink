@@ -129,7 +129,8 @@ const getProfile = async (req, res) => {
 
 const getAvg = (ratings) => {
 	if (ratings.length === 0) return 0;
-	return ratings.reduce((a, b) => a + b, 0) / ratings.length;
+	const avg = ratings.reduce((a, b) => a + b, 0) / ratings.length;
+	return avg.toFixed(2);
 };
 
 const getProfileDetail = async (req, res) => {
