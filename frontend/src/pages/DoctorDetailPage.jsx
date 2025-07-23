@@ -1,15 +1,34 @@
-import { useParams } from "react-router-dom";
-import { useGetDoctorDetails } from "../api/DoctorDetailsApi";
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { useParams, Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchDoctorById } from "../features/doctor/doctorSlice";
 import { CircleUserRound, Brush } from "lucide-react";
 import Button from "../components/Button";
 import Loading from "../components/Loading";
 
 const DoctorDetailPage = () => {
-	const params = useParams();
-	const { details, loading } = useGetDoctorDetails(params.userId);
+	const { userId } = useParams();
+	const dispatch = useDispatch();
 
-	if (loading) return <Loading />;
+	// Select the details and status from the Redux store
+	const { details, status } = useSelector((state) => state.doctor);
+
+	// Fetch the doctor details when the component mounts or userId changes
+	useEffect(() => {
+		if (userId) {
+			dispatch(fetchDoctorById(userId));
+		}
+	}, [dispatch, userId]);
+
+	// Show loading state based on the status from the store
+	if (status === "loading" || status === "idle") {
+		return <Loading />;
+	}
+
+	// Handle case where details are not found or an error occurred
+	if (status === "failed" || !details) {
+		return <div className="text-center py-10">Doctor not found.</div>;
+	}
 
 	return (
 		<div className="flex justify-center items-center">
@@ -20,9 +39,10 @@ const DoctorDetailPage = () => {
 						<div className="flex w-full flex-col gap-0.5">
 							<div className="flex items-center justify-between pt-4">
 								<h5 className="text-xl antialiased font-semibold leading-snug tracking-normal text-blue-gray-900">
-									{details?.name}
+									{details.name}
 								</h5>
 								<div className="flex items-center">
+									{/* Rating SVG */}
 									<svg
 										className="w-4 h-4 text-yellow-300 me-1"
 										aria-hidden="true"
@@ -32,17 +52,17 @@ const DoctorDetailPage = () => {
 									>
 										<path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
 									</svg>
-									<p className="ms-2 text-sm font-bold text-gray-900 dark:text-white">
-										{details.ratingDetail.avg}
+									<p className="ms-2 text-sm font-bold text-gray-900">
+										{details.ratingDetail?.avg || "N/A"}
 									</p>
-									<span className="w-1 h-1 mx-1.5 bg-gray-500 rounded-full dark:bg-gray-400"></span>
-									<span className="text-sm font-medium text-center text-gray-900 underline hover:no-underline dark:text-white">
-										{details.ratingDetail.cnt} reviews
+									<span className="w-1 h-1 mx-1.5 bg-gray-500 rounded-full"></span>
+									<span className="text-sm font-medium text-center text-gray-900 underline hover:no-underline">
+										{details.ratingDetail?.cnt || 0} reviews
 									</span>
 								</div>
 							</div>
 							<p className="block text-base antialiased font-light leading-relaxed text-blue-gray-900">
-								{details?.roleDetail.qualification}
+								{details.roleDetail?.qualification}
 							</p>
 						</div>
 					</div>
@@ -50,7 +70,7 @@ const DoctorDetailPage = () => {
 						<div className="text-lg py-3 font-light">
 							<Brush />
 							<div className="py-2">
-								{details?.roleDetail.bio}
+								{details.roleDetail?.bio}
 							</div>
 						</div>
 						<div className="py-3 text-base">
@@ -58,7 +78,7 @@ const DoctorDetailPage = () => {
 								Specialization
 							</div>
 							<div className="text-xl font-bold">
-								{details?.roleDetail.specialization}
+								{details.roleDetail?.specialization}
 							</div>
 						</div>
 						<div className="py-3 text-base">
@@ -66,7 +86,7 @@ const DoctorDetailPage = () => {
 								Years Of Experience
 							</div>
 							<div className="text-xl font-bold">
-								{details?.roleDetail.yearsOfExperience}
+								{details.roleDetail?.yearsOfExperience}
 							</div>
 						</div>
 						<div className="py-3 text-base">
@@ -74,8 +94,9 @@ const DoctorDetailPage = () => {
 								Available Hours
 							</div>
 							<div className="text-xl font-bold">
-								{details?.roleDetail.availableHours.startTime} {" - "}
-								{details?.roleDetail.availableHours.endTime}
+								{details.roleDetail?.availableHours?.startTime}{" "}
+								{" - "}
+								{details.roleDetail?.availableHours?.endTime}
 							</div>
 						</div>
 						<Link

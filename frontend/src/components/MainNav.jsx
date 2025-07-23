@@ -1,12 +1,18 @@
-import { useAuth } from "../context/AuthContext";
-import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { logout } from "../features/auth/authSlice";
 
 const MainNav = () => {
-	const { user, logout } = useAuth();
+	// Get the user object from the Redux store
+	const user = useSelector((state) => state.auth.user);
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
 	const handleLogout = () => {
-		logout();
+		dispatch(logout());
+		navigate("/login");
 	};
+
 	return (
 		<div className="sm:flex sm:items-center sm:gap-4">
 			{user ? (

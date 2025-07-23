@@ -1,29 +1,46 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext.jsx";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser } from "../features/auth/authSlice";
 import background from "../assets/login-bg.jpg";
 
 const LoginPage = () => {
+	// This local UI state remains the same
 	const [passwordVisible, setPasswordVisible] = useState(false);
-	const { user, login } = useAuth();
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 
+	// Initialize Redux and navigation hooks
+	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
+	// Get auth state from the Redux store
+	const { user, status, error } = useSelector((state) => state.auth);
+
+	// This effect still handles redirecting if the user is already logged in
 	useEffect(() => {
 		if (user) {
 			navigate("/dashboard");
 		}
 	}, [user, navigate]);
 
-	const changePasswordVisibility = (e) => {
+	// This local UI function remains the same
+	const changePasswordVisibility = () => {
 		setPasswordVisible(!passwordVisible);
 	};
 
-	const handleLogin = (e) => {
+	// The login handler now dispatches the Redux action
+	const handleLogin = async (e) => {
 		e.preventDefault();
-		login(email, password);
+		try {
+			await dispatch(loginUser({ email, password })).unwrap();
+			// We can navigate here explicitly after a successful login
+			// The useEffect above also serves as a backup for this logic
+			navigate("/dashboard");
+		} catch (err) {
+			// The error from `rejectWithValue` is caught here
+			console.error("Failed to login:", err);
+		}
 	};
 
 	return (
@@ -49,7 +66,6 @@ const LoginPage = () => {
 						<label htmlFor="email" className="sr-only">
 							Email
 						</label>
-
 						<div className="relative">
 							<input
 								type="email"
@@ -66,7 +82,6 @@ const LoginPage = () => {
 						<label htmlFor="password" className="sr-only">
 							Password
 						</label>
-
 						<div className="relative">
 							<input
 								type={passwordVisible ? "text" : "password"}
@@ -76,12 +91,12 @@ const LoginPage = () => {
 								placeholder="Enter password"
 								required
 							/>
-
 							<button
 								className="absolute inset-y-0 end-0 grid place-content-center px-4"
 								onClick={changePasswordVisibility}
 								type="button"
 							>
+								{/* SVG for password visibility toggle */}
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
 									className="size-4 text-gray-400"
@@ -116,11 +131,21 @@ const LoginPage = () => {
 
 						<button
 							type="submit"
-							className="inline-block rounded-lg bg-teal-500 px-5 py-3 text-sm font-medium text-white"
+							// Disable button while loading
+							disabled={status === "loading"}
+							className="inline-block rounded-lg bg-teal-500 px-5 py-3 text-sm font-medium text-white disabled:bg-teal-300"
 						>
-							Sign In
+							{/* Show loading text */}
+							{status === "loading" ? "Signing In..." : "Sign In"}
 						</button>
 					</div>
+					{/* Optionally, display an error message on failure */}
+					{status === "failed" && error && (
+						<p className="text-center text-sm font-medium text-red-500">
+							{error.message ||
+								"Login failed. Please check your credentials."}
+						</p>
+					)}
 				</form>
 			</div>
 
