@@ -5,16 +5,27 @@ import User from "../models/user.js";
 const authenticateJWT = async (req, res, next) => {
 	try {
 		const { authorization } = req.headers;
+
 		if (!authorization || !authorization.startsWith("Bearer ")) {
-			return res
-				.status(401)
-				.json({ message: "Authorization header missing or malformed" });
+			return res.status(401).json({
+				message: "Authorization header missing or malformed",
+			});
 		}
 
 		const token = authorization.split(" ")[1];
-		const decoded = jwt.verify(token, process.env.JWT_SECRET);
-		if (!decoded) {
-			return res.status(401).json({ message: "Invalid token" });
+
+		let decoded;
+		try {
+			decoded = jwt.verify(token, process.env.JWT_SECRET);
+		} catch (err) {
+			if (err.name === "TokenExpiredError") {
+				return res.status(401).json({ message: "Token expired" });
+			}
+			if (err.name === "JsonWebTokenError") {
+				return res.status(403).json({ message: "Invalid token" });
+			}
+			console.error("Unexpected JWT error:", err);
+			return res.status(500).json({ message: "JWT verification failed" });
 		}
 
 		const user = await User.findById(decoded.userId);
@@ -26,22 +37,24 @@ const authenticateJWT = async (req, res, next) => {
 		next();
 	} catch (error) {
 		console.error("Error in JWT authentication:", error);
-		return res
-			.status(500)
-			.json({ message: "Authentication failed", error: error.message });
+		return res.status(500).json({
+			message: "Authentication failed",
+			error: error.message,
+		});
 	}
 };
 
 const checkPassword = async (req, res, next) => {
 	try {
 		const { password } = req.body;
+
 		if (!password) {
 			return res.status(400).json({ message: "Password is required" });
 		}
 
 		const user = req.user;
 
-		if (!user.salt) {
+		if (!user?.salt) {
 			return res.status(500).json({ message: "User has no salt stored" });
 		}
 
