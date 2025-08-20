@@ -6,11 +6,7 @@ import { postRoleDetails } from "../features/auth/authSlice";
 const DoctorDetails = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-
-	// Get user and status from the Redux store
 	const { user, status, error } = useSelector((state) => state.auth);
-
-	// Local state for the form fields
 	const [specialization, setSpecialization] = useState("");
 	const [qualification, setQualification] = useState("");
 	const [bio, setBio] = useState("");
@@ -36,7 +32,6 @@ const DoctorDetails = () => {
 			await dispatch(
 				postRoleDetails({ role: user.role, roleDetails })
 			).unwrap();
-			// On success, navigate to the dashboard
 			navigate("/dashboard");
 		} catch (err) {
 			console.error("Failed to submit doctor details:", err);
@@ -53,7 +48,6 @@ const DoctorDetails = () => {
 							your profile:
 						</div>
 
-						{/* Explanatory section */}
 						<div className="flow-root rounded-lg border border-gray-100 py-3 shadow-sm">
 							<dl className="-my-3 divide-y divide-gray-100 text-sm">
 								<div className="grid grid-cols-1 gap-1 p-3 even:bg-gray-50 sm:grid-cols-3 sm:gap-4">
@@ -97,7 +91,6 @@ const DoctorDetails = () => {
 
 					<div className="rounded-lg bg-white p-8 shadow-lg lg:col-span-3 lg:p-12">
 						<form onSubmit={handleSubmit} className="space-y-4">
-							{/* Form inputs */}
 							<div>
 								<label
 									className="sr-only"
@@ -165,7 +158,7 @@ const DoctorDetails = () => {
 										}
 										className="w-full rounded-lg border-gray-200 p-3 text-sm"
 										placeholder="Years of Experience"
-										type="number" // Changed to number for better validation
+										type="number"
 										id="yearsOfExperience"
 										required
 									/>
@@ -220,7 +213,6 @@ const DoctorDetails = () => {
 								</div>
 							</div>
 
-							{/* Optional: Display error message on failure */}
 							{status === "failed" && error && (
 								<p className="text-center text-sm font-medium text-red-500">
 									{error.message ||

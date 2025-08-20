@@ -5,10 +5,9 @@ import {
 	clearSearchResults,
 } from "../features/search/searchSlice";
 import { useNavigate } from "react-router-dom";
-import { Search, LoaderCircle } from "lucide-react"; // Added a loading icon
+import { Search, LoaderCircle } from "lucide-react";
 
 const LiveSearch = ({ renderItem }) => {
-	// Local UI state remains the same
 	const [focusedIndex, setFocusedIndex] = useState(-1);
 	const [searchQuery, setSearchQuery] = useState("");
 	const resultContainer = useRef(null);
@@ -16,30 +15,25 @@ const LiveSearch = ({ renderItem }) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
-	// Get search state from the Redux store
 	const { results, status } = useSelector((state) => state.search);
 
-	// This effect handles debounced searching
 	useEffect(() => {
-		// Don't search if the query is empty
 		if (searchQuery.trim() === "") {
 			dispatch(clearSearchResults());
 			return;
 		}
 
-		// Set a timer to dispatch the search action after 300ms
 		const debounceTimer = setTimeout(() => {
 			dispatch(fetchSearchResults(searchQuery));
 		}, 300);
 
-		// Cleanup function to cancel the timer if the user keeps typing
 		return () => clearTimeout(debounceTimer);
 	}, [searchQuery, dispatch]);
 
 	const resetSearchComplete = useCallback(() => {
 		setFocusedIndex(-1);
-		setSearchQuery(""); // Clear the input field
-		dispatch(clearSearchResults()); // Clear the results in Redux
+		setSearchQuery("");
+		dispatch(clearSearchResults());
 	}, [dispatch]);
 
 	const handleSelection = (selectedIndex) => {
@@ -53,7 +47,6 @@ const LiveSearch = ({ renderItem }) => {
 		const { key } = e;
 		let nextIndexCount = 0;
 
-		// The keyboard navigation logic remains the same
 		if (key === "ArrowDown") {
 			nextIndexCount = (focusedIndex + 1) % results.length;
 		} else if (key === "ArrowUp") {
@@ -71,11 +64,7 @@ const LiveSearch = ({ renderItem }) => {
 
 	return (
 		<div className="flex items-center justify-center">
-			<div
-				// The onBlur is removed to allow clicking on search results
-				onKeyDown={handleKeyDown}
-				className="relative"
-			>
+			<div onKeyDown={handleKeyDown} className="relative">
 				<div className="relative">
 					<input
 						type="text"
@@ -84,7 +73,6 @@ const LiveSearch = ({ renderItem }) => {
 						placeholder="Search for doctors..."
 						onChange={(e) => setSearchQuery(e.target.value)}
 					/>
-					{/* Show a loading spinner or search icon */}
 					{status === "loading" ? (
 						<LoaderCircle className="absolute right-4 top-4 text-teal-700 animate-spin" />
 					) : (
@@ -92,7 +80,6 @@ const LiveSearch = ({ renderItem }) => {
 					)}
 				</div>
 
-				{/* Conditionally render results based on Redux state */}
 				{searchQuery && (
 					<div className="absolute mt-1 w-full p-2 bg-white shadow-lg rounded-b-lg max-h-56 overflow-y-auto">
 						{status === "succeeded" && results.length === 0 && (
@@ -103,7 +90,7 @@ const LiveSearch = ({ renderItem }) => {
 						{status === "succeeded" &&
 							results.map((item, index) => (
 								<div
-									key={item._id} // Use a stable key like item._id
+									key={item._id}
 									onMouseDown={() => handleSelection(index)}
 									style={{
 										backgroundColor:

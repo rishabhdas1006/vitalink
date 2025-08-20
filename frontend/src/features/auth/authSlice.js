@@ -6,11 +6,9 @@ const initialState = {
 	user: JSON.parse(localStorage.getItem("storedUser")) || null,
 	roleData: JSON.parse(localStorage.getItem("storedRoleData")) || null,
 	token: localStorage.getItem("authToken") || null,
-	status: "idle", // 'idle' | 'loading' | 'succeeded' | 'failed'
+	status: "idle",
 	error: null,
 };
-
-//== ASYNC THUNKS ==//
 
 export const loginUser = createAsyncThunk(
 	"auth/loginUser",
@@ -87,8 +85,6 @@ export const postRoleDetails = createAsyncThunk(
 	}
 );
 
-// 🔽🔽 ADD THE MISSING THUNKS HERE 🔽🔽
-
 export const fetchUserProfile = createAsyncThunk(
 	"auth/fetchUserProfile",
 	async (_, { getState, rejectWithValue }) => {
@@ -141,8 +137,6 @@ export const fetchRoleDetails = createAsyncThunk(
 	}
 );
 
-//== THE SLICE ==//
-
 const authSlice = createSlice({
 	name: "auth",
 	initialState,
@@ -178,7 +172,6 @@ const authSlice = createSlice({
 			.addCase(postRoleDetails.fulfilled, (state, action) => {
 				state.roleData = action.payload;
 			})
-			// 🔽🔽 ADD THE MISSING HANDLERS HERE 🔽🔽
 			.addCase(fetchUserProfile.fulfilled, (state, action) => {
 				state.user = action.payload;
 				state.status = "succeeded";

@@ -4,9 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../features/auth/authSlice";
 import background from "../assets/login-bg.jpg";
 
-// Corrected component name from RegisterRage to RegisterPage
 const RegisterPage = () => {
-	// Local state for the form inputs remains the same
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [phone, setPhone] = useState("");
@@ -15,32 +13,26 @@ const RegisterPage = () => {
 	const [password, setPassword] = useState("");
 	const [passwordVisible, setPasswordVisible] = useState(false);
 
-	// Initialize Redux and navigation hooks
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	// Get auth state from the Redux store
 	const { user, status, error } = useSelector((state) => state.auth);
 
-	// Redirect if user is already logged in
 	useEffect(() => {
 		if (user) {
 			navigate("/dashboard");
 		}
 	}, [user, navigate]);
 
-	// Local UI function remains the same
 	const changePasswordVisibility = () => {
 		setPasswordVisible(!passwordVisible);
 	};
 
-	// The register handler now dispatches the Redux action
 	const handleRegister = async (e) => {
 		e.preventDefault();
 		const userData = { name, email, phone, address, role, password };
 		try {
 			await dispatch(registerUser(userData)).unwrap();
-			// Navigate to the details page on successful registration
 			navigate("/details");
 		} catch (err) {
 			console.error("Failed to register:", err);
@@ -65,7 +57,6 @@ const RegisterPage = () => {
 					className="mx-auto mb-0 mt-8 max-w-md space-y-4"
 					onSubmit={handleRegister}
 				>
-					{/* Name Input */}
 					<div>
 						<input
 							type="text"
@@ -77,7 +68,6 @@ const RegisterPage = () => {
 						/>
 					</div>
 
-					{/* Email Input */}
 					<div>
 						<input
 							type="email"
@@ -89,7 +79,6 @@ const RegisterPage = () => {
 						/>
 					</div>
 
-					{/* Phone Input */}
 					<div>
 						<input
 							type="text"
@@ -100,7 +89,6 @@ const RegisterPage = () => {
 						/>
 					</div>
 
-					{/* Address Input */}
 					<div>
 						<input
 							type="text"
@@ -111,7 +99,6 @@ const RegisterPage = () => {
 						/>
 					</div>
 
-					{/* Role Selection */}
 					<div>
 						<fieldset className="grid grid-cols-2 gap-4">
 							<legend className="sr-only">Role</legend>
@@ -160,7 +147,6 @@ const RegisterPage = () => {
 						</fieldset>
 					</div>
 
-					{/* Password Input */}
 					<div>
 						<div className="relative">
 							<input
@@ -176,7 +162,6 @@ const RegisterPage = () => {
 								onClick={changePasswordVisibility}
 								type="button"
 							>
-								{/* SVG Icon */}
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
 									className="size-4 text-gray-400"
@@ -191,7 +176,6 @@ const RegisterPage = () => {
 						</div>
 					</div>
 
-					{/* Submission and Login Link */}
 					<div className="flex items-center justify-between">
 						<p className="text-sm text-gray-500">
 							Already have an account?
@@ -207,7 +191,6 @@ const RegisterPage = () => {
 							{status === "loading" ? "Signing Up..." : "Sign Up"}
 						</button>
 					</div>
-					{/* Optional Error Display */}
 					{status === "failed" && error && (
 						<p className="text-center text-sm font-medium text-red-500">
 							{error.message ||
@@ -217,7 +200,6 @@ const RegisterPage = () => {
 				</form>
 			</div>
 
-			{/* Background Image */}
 			<div className="w-full sm:h-96 lg:h-full lg:w-1/2">
 				<img
 					alt="background"

@@ -1,14 +1,12 @@
 import { useSelector } from "react-redux";
 
-const quote = // I've corrected the variable name from "qoute" to "quote"
+const quote =
 	"The doctor of the future will give no medicine, but will interest her or his patients in the care of the human frame, in a proper diet, and in the cause and prevention of disease.";
 const author = "Thomas Edison";
 
 const DashboardGreeting = () => {
-	// Get the user object from the Redux store
 	const { user } = useSelector((state) => state.auth);
 
-	// Don't render the component if there's no user data yet
 	if (!user) {
 		return null;
 	}

@@ -9,8 +9,6 @@ const initialState = {
 	error: null,
 };
 
-//== ASYNC THUNKS ==//
-
 export const fetchMyAppointments = createAsyncThunk(
 	"appointments/fetchMyAppointments",
 	async (searchDate, { getState, rejectWithValue }) => {
@@ -19,7 +17,6 @@ export const fetchMyAppointments = createAsyncThunk(
 			return rejectWithValue("Authentication token not found.");
 		}
 		try {
-			// CORRECTED: Using the endpoint from your API file
 			const response = await fetch(
 				`${API_BASE_URL}/api/v1/appointment/my/${searchDate}`,
 				{
@@ -30,7 +27,6 @@ export const fetchMyAppointments = createAsyncThunk(
 			if (!response.ok) {
 				return rejectWithValue(data);
 			}
-			// CORRECTED: Returning the whole data object as per your logic
 			return data;
 		} catch (error) {
 			return rejectWithValue(error.message);
@@ -46,7 +42,6 @@ export const fetchAppointmentById = createAsyncThunk(
 			return rejectWithValue("Authentication token not found.");
 		}
 		try {
-			// CORRECTED: Using the endpoint from your API file
 			const response = await fetch(
 				`${API_BASE_URL}/api/v1/appointment/${appointmentId}`,
 				{
@@ -57,7 +52,6 @@ export const fetchAppointmentById = createAsyncThunk(
 			if (!response.ok) {
 				return rejectWithValue(data);
 			}
-			// CORRECTED: Returning the whole data object as per your logic
 			return data;
 		} catch (error) {
 			return rejectWithValue(error.message);
@@ -73,7 +67,6 @@ export const bookNewAppointment = createAsyncThunk(
 			return rejectWithValue("Authentication token not found.");
 		}
 		try {
-			// CORRECTED: Using the endpoint from your API file
 			const response = await fetch(
 				`${API_BASE_URL}/api/v1/appointment/`,
 				{
@@ -89,7 +82,6 @@ export const bookNewAppointment = createAsyncThunk(
 			if (!response.ok) {
 				return rejectWithValue(data);
 			}
-			// This return seems correct based on your navigation logic
 			return data.appointment;
 		} catch (error) {
 			return rejectWithValue(error.message);
@@ -97,15 +89,12 @@ export const bookNewAppointment = createAsyncThunk(
 	}
 );
 
-//== THE SLICE ==//
-
 const appointmentSlice = createSlice({
 	name: "appointments",
 	initialState,
 	reducers: {},
 	extraReducers: (builder) => {
 		builder
-			// Cases for fetchMyAppointments
 			.addCase(fetchMyAppointments.pending, (state) => {
 				state.status = "loading";
 			})
@@ -117,7 +106,6 @@ const appointmentSlice = createSlice({
 				state.status = "failed";
 				state.error = action.payload;
 			})
-			// Cases for fetchAppointmentById
 			.addCase(fetchAppointmentById.pending, (state) => {
 				state.status = "loading";
 				state.selected = null;
@@ -130,7 +118,6 @@ const appointmentSlice = createSlice({
 				state.status = "failed";
 				state.error = action.payload;
 			})
-			// Cases for bookNewAppointment
 			.addCase(bookNewAppointment.pending, (state) => {
 				state.status = "loading";
 			})

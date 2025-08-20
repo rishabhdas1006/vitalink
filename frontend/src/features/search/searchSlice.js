@@ -4,17 +4,15 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const initialState = {
 	results: [],
-	status: "idle", // 'idle' | 'loading' | 'succeeded' | 'failed'
+	status: "idle",
 	error: null,
 };
 
-// This thunk replaces your useGetSearchResults hook
 export const fetchSearchResults = createAsyncThunk(
 	"search/fetchSearchResults",
 	async (query, { getState, rejectWithValue }) => {
-		// Replicating the logic to not search on an empty query
 		if (!query) {
-			return []; // Return an empty array immediately
+			return [];
 		}
 		const { token } = getState().auth;
 		if (!token) {
@@ -41,7 +39,6 @@ export const fetchSearchResults = createAsyncThunk(
 const searchSlice = createSlice({
 	name: "search",
 	initialState,
-	// Add a reducer to clear search results when needed
 	reducers: {
 		clearSearchResults: (state) => {
 			state.results = [];

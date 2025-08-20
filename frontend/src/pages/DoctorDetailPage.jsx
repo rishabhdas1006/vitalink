@@ -10,22 +10,18 @@ const DoctorDetailPage = () => {
 	const { userId } = useParams();
 	const dispatch = useDispatch();
 
-	// Select the details and status from the Redux store
 	const { details, status } = useSelector((state) => state.doctor);
 
-	// Fetch the doctor details when the component mounts or userId changes
 	useEffect(() => {
 		if (userId) {
 			dispatch(fetchDoctorById(userId));
 		}
 	}, [dispatch, userId]);
 
-	// Show loading state based on the status from the store
 	if (status === "loading" || status === "idle") {
 		return <Loading />;
 	}
 
-	// Handle case where details are not found or an error occurred
 	if (status === "failed" || !details) {
 		return <div className="text-center py-10">Doctor not found.</div>;
 	}
@@ -42,7 +38,6 @@ const DoctorDetailPage = () => {
 									{details.name}
 								</h5>
 								<div className="flex items-center">
-									{/* Rating SVG */}
 									<svg
 										className="w-4 h-4 text-yellow-300 me-1"
 										aria-hidden="true"

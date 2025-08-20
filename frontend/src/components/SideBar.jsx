@@ -4,20 +4,18 @@ import { logout } from "../features/auth/authSlice";
 import { X } from "lucide-react";
 
 const SideBar = ({ showSideBar, handleSideBarClick }) => {
-	// Get user state from the Redux store
 	const user = useSelector((state) => state.auth.user);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
 	const handleLogout = () => {
-		handleSideBarClick(); // Close the sidebar first for a smooth UI
+		handleSideBarClick();
 		dispatch(logout());
 		navigate("/login");
 	};
 
 	return (
 		<div>
-			{/* Close Button */}
 			<button
 				className={`${
 					showSideBar ? "fixed" : "hidden"
@@ -27,14 +25,12 @@ const SideBar = ({ showSideBar, handleSideBarClick }) => {
 				<X size={32} />
 			</button>
 
-			{/* Sidebar Panel */}
 			<div
 				className={`z-40 pl-8 pt-14 pr-16 fixed top-0 right-0 bg-teal-700 text-white h-full flex flex-col transition-all duration-700 ${
 					showSideBar ? "" : "translate-x-full"
 				}`}
 			>
 				{user ? (
-					// Authenticated User View
 					<>
 						<div className="font-extralight py-4">
 							<div>Hi!</div>
@@ -70,7 +66,6 @@ const SideBar = ({ showSideBar, handleSideBarClick }) => {
 						</div>
 					</>
 				) : (
-					// Guest View
 					<>
 						<div>
 							<ul className="font-medium">

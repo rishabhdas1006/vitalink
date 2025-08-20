@@ -7,20 +7,17 @@ import "react-datepicker/dist/react-datepicker.css";
 import Loading from "../components/Loading";
 
 const AppointmentBookingPage = () => {
-	const { userId: doctorId } = useParams(); // Renaming for clarity
+	const { userId: doctorId } = useParams();
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	// Get user and appointment status from Redux
 	const { user } = useSelector((state) => state.auth);
 	const { status, error } = useSelector((state) => state.appointment);
 
-	// Local state for the form
 	const [reason, setReason] = useState("");
 	const [appointmentDate, setAppointmentDate] = useState(new Date());
 	const [appointmentType, setAppointmentType] = useState("");
 
-	// Auth guard effect
 	useEffect(() => {
 		if (!user) {
 			navigate("/login");
@@ -41,14 +38,12 @@ const AppointmentBookingPage = () => {
 			const newAppointment = await dispatch(
 				bookNewAppointment(appointmentData)
 			).unwrap();
-			// On success, navigate to the new appointment's detail page
 			navigate(`/appointment/${newAppointment._id}`);
 		} catch (err) {
 			console.error("Failed to book appointment:", err);
 		}
 	};
 
-	// Show loading if user data isn't available yet
 	if (!user) {
 		return <Loading />;
 	}
@@ -68,7 +63,6 @@ const AppointmentBookingPage = () => {
 					</p>
 
 					<div className="grid grid-cols-1 md:grid-cols-6 gap-3">
-						{/* Disabled Name, Email, Phone inputs */}
 						<div className="mb-4 md:col-span-2">
 							<label>Name</label>
 							<input
@@ -97,7 +91,6 @@ const AppointmentBookingPage = () => {
 							/>
 						</div>
 
-						{/* Date Picker */}
 						<div className="mb-4 md:col-span-3 border border-gray-300 p-2">
 							<div>Preferred Appointment Date*</div>
 							<DatePicker
@@ -111,7 +104,6 @@ const AppointmentBookingPage = () => {
 							/>
 						</div>
 
-						{/* Appointment Type */}
 						<div className="mb-4 md:col-span-3 border border-gray-300 p-2">
 							<div>Appointment Type*</div>
 							<div className="grid grid-cols-2 gap-4 mt-2">
@@ -152,7 +144,6 @@ const AppointmentBookingPage = () => {
 							</div>
 						</div>
 
-						{/* Reason Textarea */}
 						<div className="mb-4 col-span-1 md:col-span-6">
 							<textarea
 								id="comment"
@@ -166,7 +157,6 @@ const AppointmentBookingPage = () => {
 						</div>
 					</div>
 
-					{/* Error Display */}
 					{status === "failed" && error && (
 						<p className="text-center text-sm font-medium text-red-500 my-2">
 							{error.message ||
@@ -174,7 +164,6 @@ const AppointmentBookingPage = () => {
 						</p>
 					)}
 
-					{/* Action Buttons */}
 					<div className="flex flex-col md:flex-row justify-end gap-3 mt-4">
 						<Link
 							to={`/dashboard`}

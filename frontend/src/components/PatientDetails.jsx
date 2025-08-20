@@ -6,11 +6,7 @@ import { postRoleDetails } from "../features/auth/authSlice";
 const PatientDetails = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-
-	// Get the current user and submission status from the Redux store
 	const { user, status, error } = useSelector((state) => state.auth);
-
-	// Local state for the form fields remains the same
 	const [medicalHistory, setMedicalHistory] = useState("");
 	const [allergies, setAllergies] = useState("");
 	const [medications, setMedications] = useState("");
@@ -27,11 +23,9 @@ const PatientDetails = () => {
 		};
 
 		try {
-			// We get the role from the logged-in user for accuracy
 			await dispatch(
 				postRoleDetails({ role: user.role, roleDetails })
 			).unwrap();
-			// On success, navigate to the dashboard
 			navigate("/dashboard");
 		} catch (err) {
 			console.error("Failed to submit patient details:", err);
@@ -47,7 +41,6 @@ const PatientDetails = () => {
 							Please provide the following details to complete
 							your profile:
 						</div>
-						{/* Explanatory section remains the same */}
 						<div className="flow-root rounded-lg border border-gray-100 py-3 shadow-sm">
 							<dl className="-my-3 divide-y divide-gray-100 text-sm">
 								<div className="grid grid-cols-1 gap-1 p-3 even:bg-gray-50 sm:grid-cols-3 sm:gap-4">
@@ -92,7 +85,6 @@ const PatientDetails = () => {
 
 					<div className="rounded-lg bg-white p-8 shadow-lg lg:col-span-3 lg:p-12">
 						<form className="space-y-4" onSubmit={handleSubmit}>
-							{/* Medical History Input */}
 							<div>
 								<div>Medical History</div>
 								<textarea
@@ -107,7 +99,6 @@ const PatientDetails = () => {
 									required
 								></textarea>
 							</div>
-							{/* Allergies Input */}
 							<div>
 								<div>
 									Allergies{" "}
@@ -126,7 +117,6 @@ const PatientDetails = () => {
 									id="allergies"
 								></textarea>
 							</div>
-							{/* Medications Input */}
 							<div>
 								<div>
 									Medications{" "}
@@ -145,7 +135,6 @@ const PatientDetails = () => {
 									id="medications"
 								></textarea>
 							</div>
-							{/* Insurance Details Input */}
 							<div>
 								<div>
 									Insurance Details{" "}
@@ -165,7 +154,6 @@ const PatientDetails = () => {
 								></textarea>
 							</div>
 
-							{/* Optional: Display error message on failure */}
 							{status === "failed" && error && (
 								<p className="text-center text-sm font-medium text-red-500">
 									{error.message ||

@@ -10,7 +10,6 @@ import DashboardGreeting from "../components/DashboardGreeting";
 import AppointmentBooking from "../components/AppointmentBooking";
 import Loading from "../components/Loading";
 
-// This helper function can remain as is
 const getSearchDate = (date) => {
 	return new Date(date.getTime() - date.getTimezoneOffset() * 60 * 1000)
 		.toISOString()
@@ -21,31 +20,25 @@ const Dashboard = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	// Select state from the Redux store
 	const { user } = useSelector((state) => state.auth);
 	const { list: appointments, status } = useSelector(
 		(state) => state.appointment
 	);
 
-	// This local state for the date picker remains the same
 	const [searchDate, setSearchDate] = useState(new Date());
 
-	// Effect to redirect if not logged in
 	useEffect(() => {
 		if (!user) {
 			navigate("/login");
 		}
 	}, [user, navigate]);
 
-	// Effect to fetch appointments when the date changes
 	useEffect(() => {
-		// Only fetch if we have a logged-in user
 		if (user) {
 			dispatch(fetchMyAppointments(getSearchDate(searchDate)));
 		}
 	}, [dispatch, user, searchDate]);
 
-	// The main loading check is simpler, just for the user object
 	if (!user) {
 		return <Loading />;
 	}
@@ -70,7 +63,6 @@ const Dashboard = () => {
 					/>
 				}
 			>
-				{/* Handle loading state specifically for the appointment list */}
 				{status === "loading" ? (
 					<Loading />
 				) : appointments.length > 0 ? (

@@ -6,30 +6,26 @@ import { Stethoscope } from "lucide-react";
 import dateFormat from "dateformat";
 import AppointmentStatus from "../components/AppointmentStatus";
 import Button from "../components/Button";
-import Loading from "../components/Loading"; // Use your Loading component
+import Loading from "../components/Loading";
 
 const AppointmentDetailsPage = () => {
 	const { appointmentId } = useParams();
 	const dispatch = useDispatch();
 
-	// Select the specific appointment and status from the Redux store
 	const { selected: appointment, status } = useSelector(
 		(state) => state.appointment
 	);
 
-	// Fetch appointment details when the component mounts or ID changes
 	useEffect(() => {
 		if (appointmentId) {
 			dispatch(fetchAppointmentById(appointmentId));
 		}
 	}, [dispatch, appointmentId]);
 
-	// Handle loading state
 	if (status === "loading" || status === "idle") {
 		return <Loading />;
 	}
 
-	// Handle failure or if no appointment is found
 	if (status === "failed" || !appointment) {
 		return (
 			<div className="text-center py-10">
